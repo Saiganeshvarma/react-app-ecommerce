@@ -10,6 +10,9 @@ const Login = () => {
   const { loading, error, token } = useSelector((state) => state.auth)
   const navigate = useNavigate()
 
+  console.log(token);
+
+
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
