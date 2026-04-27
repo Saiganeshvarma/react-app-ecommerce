@@ -1,8 +1,55 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 
-const BASE_URL = "http://localhost:3000"
+const BASE_URL =
+  import.meta.env.VITE_API_URL || "https://apis-10-hzxn.onrender.com"
 
-// REGISTER
+function decodeJwt(token) {
+  try {
+    if (!token || typeof token !== "string") return null
+    const parts = token.split(".")
+    if (parts.length < 2) return null
+
+    const base64Url = parts[1]
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/")
+    const padded = base64.padEnd(
+      base64.length + ((4 - (base64.length % 4)) % 4),
+      "="
+    )
+
+    const json = atob(padded)
+    return JSON.parse(json)
+  } catch {
+    return null
+  }
+}
+
+function userFromToken(token) {
+  const payload = decodeJwt(token)
+  if (!payload) return null
+
+  return {
+    _id: payload.userId,
+    email: payload.email,
+    role: payload.role
+  }
+}
+
+function readStoredUser() {
+  try {
+    const raw = localStorage.getItem("user")
+    return raw ? JSON.parse(raw) : null
+  } catch {
+    return null
+  }
+}
+
+const storedToken = localStorage.getItem("token") || null
+const storedUser = readStoredUser()
+const derivedStoredUser = storedUser || userFromToken(storedToken)
+
+//
+// 🔹 REGISTER
+//
 export const registerUser = createAsyncThunk(
   "auth/register",
   async (userData, { rejectWithValue }) => {
@@ -13,7 +60,7 @@ export const registerUser = createAsyncThunk(
         body: JSON.stringify(userData)
       })
 
-      const data = await res.json()
+      const data = await res.json().catch(() => ({}))
 
       if (!res.ok) {
         return rejectWithValue(data.message || "Registration failed")
@@ -21,12 +68,16 @@ export const registerUser = createAsyncThunk(
 
       return data
     } catch (err) {
-      return rejectWithValue(err.message)
+      return rejectWithValue(
+        err?.message || `Cannot reach API server at ${BASE_URL}`
+      )
     }
   }
 )
 
-// LOGIN
+//
+// 🔹 LOGIN
+//
 export const loginUser = createAsyncThunk(
   "auth/login",
   async (userData, { rejectWithValue }) => {
@@ -37,7 +88,7 @@ export const loginUser = createAsyncThunk(
         body: JSON.stringify(userData)
       })
 
-      const data = await res.json()
+      const data = await res.json().catch(() => ({}))
 
       if (!res.ok) {
         return rejectWithValue(data.message || "Login failed")
@@ -45,16 +96,21 @@ export const loginUser = createAsyncThunk(
 
       return data
     } catch (err) {
-      return rejectWithValue(err.message)
+      return rejectWithValue(
+        err?.message || `Cannot reach API server at ${BASE_URL}`
+      )
     }
   }
 )
 
+//
+// 🔹 SLICE
+//
 const authSlice = createSlice({
   name: "auth",
   initialState: {
-    user: null,
-    token: localStorage.getItem("token") || null,
+    user: derivedStoredUser,
+    token: storedToken,
     loading: false,
     error: null
   },
@@ -63,10 +119,12 @@ const authSlice = createSlice({
       state.user = null
       state.token = null
       localStorage.removeItem("token")
+      localStorage.removeItem("user")
     }
   },
   extraReducers: (builder) => {
     builder
+
       // LOGIN
       .addCase(loginUser.pending, (state) => {
         state.loading = true
@@ -74,9 +132,20 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false
-        state.user = action.payload.user
-        state.token = action.payload.token || action.payload.webToken
-        localStorage.setItem("token", state.token)
+
+        const token =
+          action.payload.token || action.payload.webToken || null
+
+        state.token = token
+
+        const apiUser = action.payload.user
+        const derivedUser = userFromToken(token)
+
+        state.user = apiUser || derivedUser
+
+        if (token) localStorage.setItem("token", token)
+        if (state.user)
+          localStorage.setItem("user", JSON.stringify(state.user))
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false
@@ -90,7 +159,11 @@ const authSlice = createSlice({
       })
       .addCase(registerUser.fulfilled, (state, action) => {
         state.loading = false
-        state.user = action.payload.user
+        state.user = action.payload.user || null
+
+        if (state.user) {
+          localStorage.setItem("user", JSON.stringify(state.user))
+        }
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false

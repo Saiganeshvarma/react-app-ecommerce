@@ -1,22 +1,17 @@
-import React from 'react'
-import { useDispatch } from "react-redux"
-import { logout } from "../Slices/authSlice"
-import { useNavigate } from "react-router-dom"
 import GetAllProducts from '../Components/GetAllProducts'
+import TopNav from "../Components/TopNav"
 
 const Home = () => {
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
-
-  const handleLogout = () => {
-    dispatch(logout())
-    navigate("/login")
-  }
-
   return (
-    <div>
-      <button onClick={handleLogout}>Logout</button>
-      <GetAllProducts />
+    <div className="app-shell">
+      <TopNav title="Browse products" />
+      <main className="page">
+        <div className="container">
+          <h1 className="page-title">Products</h1>
+          <p className="page-subtitle">Pick something you’ll love. Fast, clean, simple.</p>
+          <GetAllProducts />
+        </div>
+      </main>
     </div>
   )
 }

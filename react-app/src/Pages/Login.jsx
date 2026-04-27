@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from "react-redux"
 import { toast, Toaster } from "react-hot-toast"
-import { loginUser } from '../slices/authslice'
+import { loginUser } from '../Slices/authSlice'
 import { useNavigate } from "react-router-dom"
 import "./Login.css"
 
 const Login = () => {
   const dispatch = useDispatch()
-  const { loading, error, token } = useSelector((state) => state.auth)
+  const { loading, error, token, user } = useSelector((state) => state.auth)
   const navigate = useNavigate()
 
   console.log(token);
@@ -30,12 +30,12 @@ const Login = () => {
     if (token) {
       toast.success("Login successful 🎉")
       setTimeout(() => {
-        navigate("/home")
+        navigate(user?.role === "admin" ? "/dashboard" : "/home")
         setEmail("")
         setPassword("")
       }, 1000)
     }
-  }, [token, navigate])
+  }, [token, user, navigate])
 
   useEffect(() => {
     if (error) {

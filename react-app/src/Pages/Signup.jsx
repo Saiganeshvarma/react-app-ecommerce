@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from "react-redux"
 import { toast, Toaster } from "react-hot-toast"
-import { registerUser } from '../slices/authslice'
+import { registerUser } from '../Slices/authSlice'
 import { useNavigate } from "react-router-dom"
 import "./Signup.css"
 

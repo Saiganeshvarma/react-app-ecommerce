@@ -1,4 +1,3 @@
-import React from "react"
 import { useDispatch } from "react-redux"
 import { deleteProduct, fetchProducts } from "../Slices/ProductSlice"
 
@@ -19,13 +18,7 @@ const DeleteProduct = ({ id }) => {
   return (
     <button
       onClick={handleDelete}
-      style={{
-        marginLeft: "10px",
-        background: "red",
-        color: "white",
-        border: "none",
-        padding: "5px 10px"
-      }}
+      className="btn btn-danger"
     >
       Delete
     </button>

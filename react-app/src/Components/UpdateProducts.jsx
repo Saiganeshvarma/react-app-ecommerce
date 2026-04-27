@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import { useState } from "react"
 import { useDispatch } from "react-redux"
 import { updateProduct, fetchProducts } from "../Slices/ProductSlice"
 
@@ -31,22 +31,24 @@ const UpdateProduct = ({ product }) => {
   }
 
   return (
-    <div style={{ marginTop: "10px" }}>
+    <div>
       {isEditing ? (
-        <form onSubmit={handleSubmit}>
-          <input value={title} onChange={(e) => setTitle(e.target.value)} />
-          <input value={description} onChange={(e) => setDescription(e.target.value)} />
-          <input value={price} onChange={(e) => setPrice(e.target.value)} />
+        <form className="form" onSubmit={handleSubmit}>
+          <input className="input" value={title} onChange={(e) => setTitle(e.target.value)} />
+          <input className="input" value={description} onChange={(e) => setDescription(e.target.value)} />
+          <input className="input" value={price} onChange={(e) => setPrice(e.target.value)} />
 
-          <input type="file" onChange={(e) => setImage(e.target.files[0])} />
+          <input className="file" type="file" onChange={(e) => setImage(e.target.files[0])} />
 
-          <button type="submit">Save</button>
-          <button type="button" onClick={() => setIsEditing(false)}>
+          <div className="actions-row">
+            <button className="btn btn-primary" type="submit">Save</button>
+            <button className="btn" type="button" onClick={() => setIsEditing(false)}>
             Cancel
-          </button>
+            </button>
+          </div>
         </form>
       ) : (
-        <button onClick={() => setIsEditing(true)}>Edit</button>
+        <button className="btn" onClick={() => setIsEditing(true)}>Edit</button>
       )}
     </div>
   )

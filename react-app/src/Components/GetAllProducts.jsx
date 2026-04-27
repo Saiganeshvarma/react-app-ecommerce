@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useSelector, useDispatch } from "react-redux"
 import { fetchProducts } from '../Slices/ProductSlice'
 import { useNavigate } from "react-router-dom"
@@ -17,45 +17,44 @@ const GetAllProducts = () => {
     dispatch(fetchProducts())
   }, [dispatch])
 
-  if (loading) return <h2>Loading...</h2>
-  if (error) return <h2>{error}</h2>
+  if (loading) return <div className="card"><div className="card-body">Loading…</div></div>
+  if (error) return <div className="card"><div className="card-body">{error}</div></div>
 
   return (
-    <div>
-      <h1>All Products</h1>
-
+    <div className="grid grid-products">
       {items.map((product) => (
-        <div
-          key={product._id}
-          style={{
-            border: "1px solid gray",
-            margin: "10px",
-            padding: "10px"
-          }}
-        >
-          {/* 👉 CLICK ONLY ON CONTENT, NOT BUTTONS */}
+        <div key={product._id} className="card product-card">
           <div
+            className="product-media"
+            role="button"
+            tabIndex={0}
             onClick={() => navigate(`/product/${product._id}`)}
-            style={{ cursor: "pointer" }}
           >
-            <h2>{product.title}</h2>
-            <p>{product.description}</p>
-            <h3>₹ {product.price}</h3>
-
-            <img
-              src={product.image?.url}
-              alt={product.title}
-              width="150"
-            />
+            {product.image?.url ? (
+              <img src={product.image?.url} alt={product.title} />
+            ) : (
+              <div className="chip">No image</div>
+            )}
           </div>
 
-          {/* ✅ ADMIN ONLY BUTTONS */}
-          {user?.role === "admin" && (
-            <div style={{ marginTop: "10px" }}>
-              <UpdateProduct product={product} />
-              <DeleteProduct id={product._id} />
+          <div className="card-body">
+            <h3 className="product-title">{product.title}</h3>
+            <p className="product-desc">{product.description}</p>
+
+            <div className="price-row">
+              <div className="price">₹ {product.price}</div>
+              <button className="btn btn-ghost" onClick={() => navigate(`/product/${product._id}`)}>
+                View
+              </button>
             </div>
-          )}
+
+            {user?.role === "admin" && (
+              <div className="actions-row">
+                <UpdateProduct product={product} />
+                <DeleteProduct id={product._id} />
+              </div>
+            )}
+          </div>
         </div>
       ))}
     </div>
