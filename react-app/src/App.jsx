@@ -3,42 +3,31 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
 import { useSelector } from "react-redux"
 
 import Login from "./Pages/Login"
+import Signup from "./Pages/Signup"
 import Home from "./Pages/Home"
 import Dashboard from "./Pages/Dashboard"
 
 const App = () => {
-  const { user } = useSelector((state) => state.auth)
+  const { user, token } = useSelector((state) => state.auth)
 
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Signup />} />
 
-        {/* Login */}
-        <Route path="/" element={<Login />} />
-
-        {/* User + Admin */}
         <Route path="/home" element={<Home />} />
 
-        {/* Admin Only */}
         <Route
           path="/dashboard"
           element={
-            user?.role === "admin"
+            token && user?.role === "admin"
               ? <Dashboard />
-              : <Navigate to="/home" />
+              : <Navigate to="/login" />
           }
         />
 
-        {/* Default redirect */}
-        <Route
-          path="*"
-          element={
-            user?.role === "admin"
-              ? <Navigate to="/dashboard" />
-              : <Navigate to="/home" />
-          }
-        />
-
+        <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </BrowserRouter>
   )

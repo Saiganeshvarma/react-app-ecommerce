@@ -1,41 +1,69 @@
-import React, { useState } from 'react'
-
-import {useDispatch} from "react-redux"
-import { addProduct } from '../Slices/productSlice'
+import React, { useState } from "react"
+import { useDispatch } from "react-redux"
+import { addProduct, fetchProducts } from "../Slices/ProductSlice"
 
 const AddNewProduct = () => {
-  var dispatch = useDispatch()
-  var [title,setTitle] = useState("")
-  var [description,setDescription] = useState("")
-  var [price,setPrice] = useState("")
-  var [image,setImage] = useState(null)
+  const dispatch = useDispatch()
 
-  var handleSubmit = (e)=>{
+  const [title, setTitle] = useState("")
+  const [description, setDescription] = useState("")
+  const [price, setPrice] = useState("")
+  const [image, setImage] = useState(null)
+
+  const handleSubmit = (e) => {
     e.preventDefault()
-    var formData = new FormData()
-    formData.append("title",title)
-    formData.append("description",description)
-    formData.append("price",price)
-    formData.append("image",image)
+
+    if (!title || !description || !price) {
+      alert("Fill all fields")
+      return
+    }
+
+    const formData = new FormData()
+    formData.append("title", title)
+    formData.append("description", description)
+    formData.append("price", price)
+
+    if (image) {
+      formData.append("image", image)
+    }
+
+    dispatch(addProduct(formData))
+      .then(() => {
+        dispatch(fetchProducts()) // refresh list
+        setTitle("")
+        setDescription("")
+        setPrice("")
+        setImage(null)
+      })
   }
-  dispatch(addProduct(formData))
 
   return (
-    <div>
-      <form onSubmit={handleSubmit} action="">
-      <h1>Add new product</h1>
-      <label htmlFor="">Enter Product title</label>
-      <input value={title} onChange={(e)=>{setTitle(e.target.value)}} type="text" />
-      <label htmlFor="">Enter Product Description</label>
-      <input value={description} onChange={(e)=>{setDescription(e.target.value)}} type="text" />
-      <label htmlFor="">Enter product Price</label>
-      <input value={price} onChange={(e)=>{setPrice(e.target.value)}} type="text" />
-      <label htmlFor="">Enter Product image</label>
-      <input type="file" value={image} onChange={(e)=>{setImage(e.target.files[0])}} />
-      <button type='submit'>Add  Product</button>
+    <div style={{ marginBottom: "20px" }}>
+      <h2>Add Product</h2>
+
+      <form onSubmit={handleSubmit}>
+        <input
+          placeholder="Title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+
+        <input
+          placeholder="Description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
+
+        <input
+          placeholder="Price"
+          value={price}
+          onChange={(e) => setPrice(e.target.value)}
+        />
+
+        <input type="file" onChange={(e) => setImage(e.target.files[0])} />
+
+        <button type="submit">Add</button>
       </form>
-
-
     </div>
   )
 }

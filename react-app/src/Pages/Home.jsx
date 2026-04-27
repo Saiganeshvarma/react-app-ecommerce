@@ -1,30 +1,22 @@
 import React from 'react'
-import { useDispatch, useSelector } from "react-redux"
-import { logout } from "../slices/authSlice"
+import { useDispatch } from "react-redux"
+import { logout } from "../Slices/authSlice"
 import { useNavigate } from "react-router-dom"
-import GetAllProducts from '../Components/getAllProducts'
-import GetSingleProduct from '../Components/GetSingleProduct'
+import GetAllProducts from '../Components/GetAllProducts'
 
 const Home = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  const { user } = useSelector((state) => state.auth)
-
   const handleLogout = () => {
     dispatch(logout())
-    
     navigate("/login")
   }
 
   return (
     <div>
-        <button onClick={handleLogout}>
-          Logout
-        </button>
-        <GetAllProducts/>
-        <GetSingleProduct/>
-
+      <button onClick={handleLogout}>Logout</button>
+      <GetAllProducts />
     </div>
   )
 }

@@ -1,29 +1,28 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 
-const BASE_URL = "http://localhost:3000"   // ✅ local server
+const BASE_URL = "http://localhost:3000"
 
 // REGISTER
 export const registerUser = createAsyncThunk(
   "auth/register",
   async (userData, { rejectWithValue }) => {
-    const response = await fetch(`${BASE_URL}/api/userRoutes/register`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(userData)
-    })
+    try {
+      const res = await fetch(`${BASE_URL}/api/userRoutes/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userData)
+      })
 
-    const data = await response.json()
+      const data = await res.json()
 
-    if (!response.ok) {
-      if (data.message === "user exists") {
-        return rejectWithValue("Email already exists")
+      if (!res.ok) {
+        return rejectWithValue(data.message || "Registration failed")
       }
-      return rejectWithValue(data.message || "Registration failed")
-    }
 
-    return data
+      return data
+    } catch (err) {
+      return rejectWithValue(err.message)
+    }
   }
 )
 
@@ -31,45 +30,58 @@ export const registerUser = createAsyncThunk(
 export const loginUser = createAsyncThunk(
   "auth/login",
   async (userData, { rejectWithValue }) => {
-    const response = await fetch(`${BASE_URL}/api/userRoutes/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(userData)
-    })
+    try {
+      const res = await fetch(`${BASE_URL}/api/userRoutes/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userData)
+      })
 
-    const data = await response.json()
+      const data = await res.json()
 
-    if (!response.ok) {
-      return rejectWithValue(data.message || "Login failed")
+      if (!res.ok) {
+        return rejectWithValue(data.message || "Login failed")
+      }
+
+      return data
+    } catch (err) {
+      return rejectWithValue(err.message)
     }
-
-    return data
   }
 )
 
 const authSlice = createSlice({
-  name: "authSlice",
+  name: "auth",
   initialState: {
     user: null,
+    token: localStorage.getItem("token") || null,
     loading: false,
-    error: null,
-    token: localStorage.getItem("token") || null
+    error: null
   },
-
   reducers: {
     logout: (state) => {
       state.user = null
       state.token = null
-      state.error = null
-      state.loading = false
       localStorage.removeItem("token")
     }
   },
-
   extraReducers: (builder) => {
     builder
+      // LOGIN
+      .addCase(loginUser.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.loading = false
+        state.user = action.payload.user
+        state.token = action.payload.token || action.payload.webToken
+        localStorage.setItem("token", state.token)
+      })
+      .addCase(loginUser.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload
+      })
 
       // REGISTER
       .addCase(registerUser.pending, (state) => {
@@ -78,25 +90,9 @@ const authSlice = createSlice({
       })
       .addCase(registerUser.fulfilled, (state, action) => {
         state.loading = false
-        state.user = action.payload
+        state.user = action.payload.user
       })
       .addCase(registerUser.rejected, (state, action) => {
-        state.loading = false
-        state.error = action.payload
-      })
-
-      // LOGIN
-      .addCase(loginUser.pending, (state) => {
-        state.loading = true
-        state.error = null
-      })
-      .addCase(loginUser.fulfilled, (state, action) => {
-        state.loading = false
-        state.user = action.payload.user 
-        state.token = action.payload.webToken
-        localStorage.setItem("token", action.payload.webToken)
-      })
-      .addCase(loginUser.rejected, (state, action) => {
         state.loading = false
         state.error = action.payload
       })

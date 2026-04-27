@@ -1,27 +1,17 @@
-import React from 'react'
-import GetAllProducts from '../Components/getAllProducts'
-import AddNewProduct from '../Components/AddNewProduct'
-import UpdateProducts from '../Components/UpdateProducts'
-import DeleteProduct from '../Components/DeleteProduct'
-import GetSingleProduct from '../Components/GetSingleProduct'
+import React from "react"
+import AddNewProduct from "../Components/AddNewProduct"
+import GetAllProducts from "../Components/GetAllProducts"
 
 const Dashboard = () => {
-    
   return (
     <div>
-      <GetAllProducts/>
-      <GetSingleProduct/>
-      <AddNewProduct/>
-      <UpdateProducts/>
-      <DeleteProduct/>
+      <h1>Admin Dashboard</h1>
 
+      {/* Add Product */}
+      <AddNewProduct />
 
-
-      
-
-
-
-
+      {/* All Products with Edit/Delete */}
+      <GetAllProducts />
     </div>
   )
 }
