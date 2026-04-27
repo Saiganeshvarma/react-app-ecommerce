@@ -1,22 +1,46 @@
-import React from 'react'
+import React from "react"
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
+import { useSelector } from "react-redux"
 
-import {BrowserRouter,Routes,Route} from "react-router-dom"
-import Signup from './Pages/Signup'
-import Login from './Pages/Login'
-import Home from './Pages/Home'
+import Login from "./Pages/Login"
+import Home from "./Pages/Home"
+import Dashboard from "./Pages/Dashboard"
+
 const App = () => {
+  const { user } = useSelector((state) => state.auth)
+
   return (
-    <div>
-        <BrowserRouter>
-        <Routes>
-            <Route path='/' element={<Signup/>}/>
-            <Route path='/login' element={<Login/>}/>
-            <Route path='/home' element = {<Home/>}/>
+    <BrowserRouter>
+      <Routes>
 
-        </Routes>
-        </BrowserRouter>
+        {/* Login */}
+        <Route path="/" element={<Login />} />
 
-    </div>
+        {/* User + Admin */}
+        <Route path="/home" element={<Home />} />
+
+        {/* Admin Only */}
+        <Route
+          path="/dashboard"
+          element={
+            user?.role === "admin"
+              ? <Dashboard />
+              : <Navigate to="/home" />
+          }
+        />
+
+        {/* Default redirect */}
+        <Route
+          path="*"
+          element={
+            user?.role === "admin"
+              ? <Navigate to="/dashboard" />
+              : <Navigate to="/home" />
+          }
+        />
+
+      </Routes>
+    </BrowserRouter>
   )
 }
 

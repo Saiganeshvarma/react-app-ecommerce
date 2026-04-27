@@ -4,7 +4,6 @@ import { toast, Toaster } from "react-hot-toast"
 import { registerUser } from '../slices/authslice'
 import { useNavigate } from "react-router-dom"
 import "./Signup.css"
-import Navbar from '../Components/NavBar'
 
 const Signup = () => {
   const dispatch = useDispatch()
@@ -31,7 +30,7 @@ const Signup = () => {
       toast.success("Account created 🎉")
       setTimeout(() => {
         navigate("/login")
-
+        
       }, 1000)
     }
   }, [user, navigate])
@@ -47,7 +46,6 @@ const Signup = () => {
 
   return (
     <>
-      <Navbar />
       <div className="signup-container">
         <Toaster />
 

@@ -2,6 +2,8 @@ import React from 'react'
 import { useDispatch, useSelector } from "react-redux"
 import { logout } from "../slices/authSlice"
 import { useNavigate } from "react-router-dom"
+import GetAllProducts from '../Components/getAllProducts'
+import GetSingleProduct from '../Components/GetSingleProduct'
 
 const Home = () => {
   const dispatch = useDispatch()
@@ -16,26 +18,12 @@ const Home = () => {
   }
 
   return (
-    <div style={{ padding: "20px" }}>
-      
-      {/* Top Bar */}
-      <div style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center"
-      }}>
-        <h2>Welcome {user?.name || "User"} 👋</h2>
-
+    <div>
         <button onClick={handleLogout}>
           Logout
         </button>
-      </div>
-
-      {/* Content */}
-      <div style={{ marginTop: "40px" }}>
-        <h3>Home Page</h3>
-        <p>You are successfully logged in 🎉</p>
-      </div>
+        <GetAllProducts/>
+        <GetSingleProduct/>
 
     </div>
   )
