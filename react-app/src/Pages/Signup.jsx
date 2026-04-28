@@ -8,25 +8,37 @@ import "./Signup.css"
 const Signup = () => {
   const dispatch = useDispatch()
   const { user, loading, error } = useSelector((state) => state.auth)
+  const token = useSelector((state) => state.auth.token)
   const navigate = useNavigate()
 
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  // Track whether the user just submitted the form
+  const [submitted, setSubmitted] = useState(false)
+
+  // If already logged in, redirect immediately — don't show signup
+  useEffect(() => {
+    if (token) {
+      navigate(user?.role === "admin" ? "/dashboard" : "/home", { replace: true })
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSubmit = (e) => {
     e.preventDefault()
     if (!name || !email || !password)
       return toast.error("Please fill all the details")
+    setSubmitted(true)
     dispatch(registerUser({ name, email, password }))
   }
 
+  // Only navigate after a form submission, not on initial mount
   useEffect(() => {
-    if (user) {
+    if (submitted && user) {
       toast.success("Account created 🎉")
       setTimeout(() => navigate("/login"), 1000)
     }
-  }, [user, navigate])
+  }, [user, submitted, navigate])
 
   useEffect(() => {
     if (error) toast.error(error)

@@ -11,15 +11,13 @@ export default defineConfig({
     rollupOptions: {
       output: {
         // Split vendor libs into separate cached chunks
-        manualChunks: {
-          // React core — changes rarely, cached long-term
-          "vendor-react": ["react", "react-dom"],
-          // Router
-          "vendor-router": ["react-router-dom"],
-          // Redux
-          "vendor-redux": ["@reduxjs/toolkit", "react-redux"],
-          // Toast
-          "vendor-toast": ["react-hot-toast"],
+        manualChunks(id) {
+          if (id.includes("node_modules")) {
+            if (id.includes("react-router-dom") || id.includes("react-router")) return "vendor-router"
+            if (id.includes("@reduxjs/toolkit") || id.includes("react-redux") || id.includes("immer")) return "vendor-redux"
+            if (id.includes("react-hot-toast")) return "vendor-toast"
+            if (id.includes("react-dom") || id.includes("react/")) return "vendor-react"
+          }
         },
       },
     },

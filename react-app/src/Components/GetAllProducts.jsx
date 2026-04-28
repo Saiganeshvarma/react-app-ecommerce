@@ -62,7 +62,7 @@ const GetAllProducts = () => {
               {user?.role === "admin" ? (
                 <div className="actions-row">
                   <UpdateProduct product={product} />
-                  <DeleteProduct id={product._id} />
+                  <DeleteProduct id={product._id} title={product.title} />
                 </div>
               ) : (
                 <div className="actions-row">

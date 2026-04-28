@@ -12,16 +12,27 @@ const Login = () => {
 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  // Track whether the user just submitted the form
+  const [submitted, setSubmitted] = useState(false)
+
+  // If already logged in, redirect immediately — don't show login
+  useEffect(() => {
+    if (token) {
+      navigate(user?.role === "admin" ? "/dashboard" : "/home", { replace: true })
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleLogin = (e) => {
     e.preventDefault()
     if (!email || !password)
       return toast.error("Fill email and password")
+    setSubmitted(true)
     dispatch(loginUser({ email, password }))
   }
 
+  // Only navigate after a form submission, not on initial mount
   useEffect(() => {
-    if (token) {
+    if (submitted && token) {
       toast.success("Login successful 🎉")
       setTimeout(() => {
         navigate(user?.role === "admin" ? "/dashboard" : "/home")
@@ -29,7 +40,7 @@ const Login = () => {
         setPassword("")
       }, 1000)
     }
-  }, [token, user, navigate])
+  }, [token, submitted, user, navigate])
 
   useEffect(() => {
     if (error) toast.error(error)
