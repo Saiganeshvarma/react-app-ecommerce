@@ -8,7 +8,6 @@ import Store from './Store/Store'
 createRoot(document.getElementById('root')).render(
   <Provider store={Store}>
      <App />
-
   </Provider>
    
 )

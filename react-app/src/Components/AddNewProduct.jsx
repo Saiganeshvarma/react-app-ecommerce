@@ -2,102 +2,147 @@ import { useState } from "react"
 import { useDispatch } from "react-redux"
 import { addProduct, fetchProducts } from "../Slices/ProductSlice"
 import { toast } from "react-hot-toast"
+import "./AddNewProduct.css"
 
-const AddNewProduct = () => {
+const AddNewProduct = ({ close }) => {
   const dispatch = useDispatch()
 
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
   const [price, setPrice] = useState("")
   const [image, setImage] = useState(null)
+  const [preview, setPreview] = useState(null)
+  const [loading, setLoading] = useState(false)
+
+  const handleImage = (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+    setImage(file)
+    setPreview(URL.createObjectURL(file))
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    if (!title || !description || !price) {
+    if (!title || !description || !price)
       return toast.error("Please fill all fields")
-    }
 
-    // Backend requires image (API responds: "Image file is required")
-    if (!image) {
+    if (!image)
       return toast.error("Please select a product image")
-    }
 
     const priceNumber = Number(price)
-    if (!Number.isFinite(priceNumber) || priceNumber <= 0) {
+    if (!Number.isFinite(priceNumber) || priceNumber <= 0)
       return toast.error("Please enter a valid price")
-    }
 
     const formData = new FormData()
     formData.append("title", title)
     formData.append("description", description)
     formData.append("price", String(priceNumber))
-
     formData.append("image", image)
 
     try {
+      setLoading(true)
       await dispatch(addProduct(formData)).unwrap()
-      toast.success("Product added")
+      toast.success("Product added successfully")
       dispatch(fetchProducts())
       setTitle("")
       setDescription("")
       setPrice("")
       setImage(null)
+      setPreview(null)
+      close?.()
     } catch (err) {
       toast.error(String(err || "Add failed"))
+    } finally {
+      setLoading(false)
     }
   }
 
   return (
-    <form className="form" onSubmit={handleSubmit}>
-      <div className="form-row">
-        <input
-          className="input"
-          placeholder="Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
+    <form className="anp-form" onSubmit={handleSubmit}>
 
+      {/* Image upload zone */}
+      <label className="anp-upload-zone" htmlFor="anp-file-input">
+        {preview ? (
+          <img src={preview} alt="preview" className="anp-preview" />
+        ) : (
+          <div className="anp-upload-placeholder">
+            <span className="anp-upload-icon">🖼️</span>
+            <span className="anp-upload-label">Click to upload product image</span>
+            <span className="anp-upload-hint">PNG, JPG, WEBP — required</span>
+          </div>
+        )}
         <input
-          className="input"
-          placeholder="Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-
-        <input
-          className="input"
-          placeholder="Price"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-        />
-
-        <input
-          className="file"
+          id="anp-file-input"
           type="file"
           accept="image/*"
-          onChange={(e) => setImage(e.target.files[0])}
+          onChange={handleImage}
+          style={{ display: "none" }}
         />
-        <div className="helper">Image is required by the backend.</div>
+      </label>
+
+      {/* Fields */}
+      <div className="anp-fields">
+        <div className="anp-field">
+          <label className="anp-label" htmlFor="anp-title">Title</label>
+          <input
+            id="anp-title"
+            className="input anp-input"
+            placeholder="e.g. Wireless Headphones"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+        </div>
+
+        <div className="anp-field">
+          <label className="anp-label" htmlFor="anp-desc">Description</label>
+          <textarea
+            id="anp-desc"
+            className="textarea anp-input"
+            placeholder="Short product description…"
+            rows={3}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+        </div>
+
+        <div className="anp-field">
+          <label className="anp-label" htmlFor="anp-price">Price ($)</label>
+          <input
+            id="anp-price"
+            className="input anp-input"
+            placeholder="0.00"
+            type="number"
+            min="0"
+            step="0.01"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+          />
+        </div>
       </div>
 
-      <div className="actions-row">
-        <button className="btn btn-primary" type="submit">
-          Add product
+      {/* Actions */}
+      <div className="anp-actions">
+        <button
+          type="button"
+          className="btn anp-btn-cancel"
+          onClick={() => close?.()}
+        >
+          Cancel
         </button>
         <button
-          className="btn"
-          type="button"
-          onClick={() => {
-            setTitle("")
-            setDescription("")
-            setPrice("")
-            setImage(null)
-          }}
+          type="submit"
+          className="btn btn-primary anp-btn-submit"
+          disabled={loading}
         >
-          Clear
+          {loading ? (
+            <span className="anp-spinner" />
+          ) : (
+            "Add Product"
+          )}
         </button>
       </div>
+
     </form>
   )
 }

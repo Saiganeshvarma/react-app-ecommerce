@@ -16,96 +16,105 @@ const Signup = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-
-    if (!name || !email || !password) {
+    if (!name || !email || !password)
       return toast.error("Please fill all the details")
-    }
-
     dispatch(registerUser({ name, email, password }))
   }
 
-  // success
   useEffect(() => {
     if (user) {
       toast.success("Account created 🎉")
-      setTimeout(() => {
-        navigate("/login")
-        
-      }, 1000)
+      setTimeout(() => navigate("/login"), 1000)
     }
   }, [user, navigate])
 
-  // error
   useEffect(() => {
-    if (error) {
-      toast.error(error)
-      
-
-    }
+    if (error) toast.error(error)
   }, [error])
 
   return (
-    <>
-      <div className="signup-container">
-        <Toaster />
+    <div className="signup-container">
+      <Toaster />
 
-        {/* LEFT IMAGE */}
-        <div className="signup-left">
-          <img
-            src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da"
-            alt="ecommerce"
-          />
+      {/* LEFT IMAGE PANEL */}
+      <div className="signup-left">
+        <img
+          src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da"
+          alt="ecommerce"
+        />
+        <div className="signup-left-badge">
+          <h3>Shop the latest<br />trends today.</h3>
+          <p>Thousands of products. One account.</p>
         </div>
+      </div>
 
-        {/* RIGHT FORM */}
-        <div className="signup-right">
-          <div className="signup-box">
-            <h2>Create Account</h2>
-            <p>Join us and start shopping 🛍️</p>
+      {/* RIGHT FORM PANEL */}
+      <div className="signup-right">
+        <div className="signup-box">
 
-            <form onSubmit={handleSubmit}>
+          {/* Brand */}
+          <div className="signup-brand">
+            <div className="signup-brand-dot">🛍️</div>
+            <span className="signup-brand-name">ShopLux</span>
+          </div>
 
+          <h2>Create Account</h2>
+          <p className="signup-sub">Join us and start shopping today</p>
+
+          <form onSubmit={handleSubmit}>
+
+            <div className="signup-field">
+              <label htmlFor="su-name">Full Name</label>
               <input
+                id="su-name"
                 type="text"
-                placeholder="Enter Name"
+                placeholder="John Doe"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
+            </div>
 
+            <div className="signup-field">
+              <label htmlFor="su-email">Email Address</label>
               <input
+                id="su-email"
                 type="email"
-                placeholder="Enter Email"
+                placeholder="you@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className={error ? "error-input" : ""}
               />
+            </div>
 
-              {/* INLINE ERROR */}
-              
-
+            <div className="signup-field">
+              <label htmlFor="su-password">Password</label>
               <input
+                id="su-password"
                 type="password"
-                placeholder="Enter Password"
+                placeholder="Min. 8 characters"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
+            </div>
 
-              <button type="submit" disabled={loading}>
-                {loading ? "Registering..." : "Register"}
-              </button>
-              {error && (
-                <p className="error-text">{error}</p>
-              )}
-            </form>
+            {error && <p className="error-text">{error}</p>}
 
-            <p className="login-text">
-              Already have an account?{" "}
-              <span onClick={() => navigate("/login")}>Login</span>
-            </p>
-          </div>
+            <button type="submit" disabled={loading}>
+              {loading ? "Creating account…" : "Create Account"}
+            </button>
+
+          </form>
+
+          <div className="signup-divider">or</div>
+
+          <p className="login-text">
+            Already have an account?{" "}
+            <span onClick={() => navigate("/login")}>Sign in</span>
+          </p>
+
         </div>
       </div>
-    </>
+    </div>
   )
 }
 
