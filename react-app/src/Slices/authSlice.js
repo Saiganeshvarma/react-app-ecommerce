@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 
-const BASE_URL =
-  import.meta.env.VITE_API_URL || "https://apis-10-hzxn.onrender.com"
+const BASE_URL = "https://apis-17.onrender.com"
 
 function decodeJwt(token) {
   try {

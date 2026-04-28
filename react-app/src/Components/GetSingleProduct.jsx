@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { useParams, useNavigate } from "react-router-dom"
 import { fetchSingleProduct } from '../Slices/ProductSlice'
 import TopNav from "./TopNav"
+import "./GetSingleProduct.css"
 
 const GetSingleProduct = () => {
   const { id } = useParams()
@@ -17,73 +18,103 @@ const GetSingleProduct = () => {
     dispatch(fetchSingleProduct(id))
   }, [dispatch, id])
 
-  if (loading) {
-    return (
-      <div className="app-shell">
-        <TopNav title="Product" />
-        <main className="page">
-          <div className="container">
-            <div className="card"><div className="card-body">Loading…</div></div>
+  if (loading) return (
+    <div className="app-shell">
+      <TopNav title="Product" />
+      <main className="page">
+        <div className="container">
+          <div className="sp-skeleton">
+            <div className="sp-skeleton-img" />
+            <div className="sp-skeleton-body">
+              <div className="sp-skeleton-line sp-skeleton-line--title" />
+              <div className="sp-skeleton-line" />
+              <div className="sp-skeleton-line sp-skeleton-line--short" />
+            </div>
           </div>
-        </main>
-      </div>
-    )
-  }
+        </div>
+      </main>
+    </div>
+  )
 
-  if (error) {
-    return (
-      <div className="app-shell">
-        <TopNav title="Product" />
-        <main className="page">
-          <div className="container">
-            <div className="card"><div className="card-body">{error}</div></div>
-          </div>
-        </main>
-      </div>
-    )
-  }
-
-  if (!singleProduct) {
-    return (
-      <div className="app-shell">
-        <TopNav title="Product" />
-        <main className="page">
-          <div className="container">
-            <div className="card"><div className="card-body">No Product Found</div></div>
-          </div>
-        </main>
-      </div>
-    )
-  }
+  if (error || !singleProduct) return (
+    <div className="app-shell">
+      <TopNav title="Product" />
+      <main className="page">
+        <div className="container">
+          <div className="card card-body">{error || "No product found."}</div>
+        </div>
+      </main>
+    </div>
+  )
 
   return (
     <div className="app-shell">
       <TopNav title="Product details" />
       <main className="page">
         <div className="container">
-          <button className="btn btn-ghost" onClick={() => navigate(-1)}>← Back</button>
 
-          <div style={{ height: 14 }} />
+          <button className="btn btn-ghost sp-back" onClick={() => navigate(-1)}>
+            ← Back
+          </button>
 
-          <div className="grid" style={{ gridTemplateColumns: "1fr", gap: 14 }}>
-            <div className="card" style={{ overflow: "hidden" }}>
-              <div className="product-media" style={{ aspectRatio: "16 / 9" }}>
-                {singleProduct.image?.url ? (
-                  <img src={singleProduct.image?.url} alt={singleProduct.title} />
-                ) : (
-                  <div className="chip">No image</div>
-                )}
+          <div className="sp-layout">
+
+            {/* IMAGE */}
+            <div className="sp-image-wrap">
+              {singleProduct.image?.url ? (
+                <img
+                  src={singleProduct.image.url}
+                  alt={singleProduct.title}
+                  className="sp-image"
+                />
+              ) : (
+                <div className="sp-no-image">No image</div>
+              )}
+            </div>
+
+            {/* DETAILS */}
+            <div className="sp-details">
+
+              <p className="sp-category">Product Details</p>
+              <h1 className="sp-title">{singleProduct.title}</h1>
+              <p className="sp-desc">{singleProduct.description}</p>
+
+              <div className="sp-price-block">
+                <span className="sp-price">₹ {singleProduct.price}</span>
+                <span className="sp-badge">In Stock</span>
               </div>
-              <div className="card-body">
-                <h1 className="page-title" style={{ marginBottom: 6 }}>{singleProduct.title}</h1>
-                <p className="page-subtitle" style={{ marginBottom: 14 }}>{singleProduct.description}</p>
-                <div className="price-row">
-                  <div className="price" style={{ fontSize: 22 }}>₹ {singleProduct.price}</div>
-                  <span className="chip">Secure checkout</span>
+
+              <div className="sp-divider" />
+
+              <div className="sp-meta">
+                <div className="sp-meta-item">
+                  <span className="sp-meta-label">Shipping</span>
+                  <span className="sp-meta-value">Free delivery</span>
+                </div>
+                <div className="sp-meta-item">
+                  <span className="sp-meta-label">Returns</span>
+                  <span className="sp-meta-value">30-day returns</span>
+                </div>
+                <div className="sp-meta-item">
+                  <span className="sp-meta-label">Payment</span>
+                  <span className="sp-meta-value">Secure checkout</span>
                 </div>
               </div>
+
+              <div className="sp-divider" />
+
+              <div className="sp-actions">
+                <button className="btn btn-primary sp-btn-buy">
+                  Buy Now
+                </button>
+                <button className="btn sp-btn-cart">
+                  Add to Cart
+                </button>
+              </div>
+
             </div>
           </div>
+
         </div>
       </main>
     </div>

@@ -10,19 +10,13 @@ const Login = () => {
   const { loading, error, token, user } = useSelector((state) => state.auth)
   const navigate = useNavigate()
 
-  console.log(token);
-
-
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
   const handleLogin = (e) => {
     e.preventDefault()
-
-    if (!email || !password) {
+    if (!email || !password)
       return toast.error("Fill email and password")
-    }
-
     dispatch(loginUser({ email, password }))
   }
 
@@ -38,53 +32,75 @@ const Login = () => {
   }, [token, user, navigate])
 
   useEffect(() => {
-    if (error) {
-      toast.error(error)
-    }
+    if (error) toast.error(error)
   }, [error])
 
   return (
     <div className="login-container">
       <Toaster />
 
-      {/* LEFT IMAGE */}
+      {/* LEFT IMAGE PANEL */}
       <div className="login-left">
         <img
           src="https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a"
           alt="ecommerce"
         />
+        <div className="login-left-badge">
+          <h3>Welcome back<br />to ShopLux.</h3>
+          <p>Your cart is waiting for you.</p>
+        </div>
       </div>
 
-      {/* RIGHT SIDE FORM */}
+      {/* RIGHT FORM PANEL */}
       <div className="login-right">
         <div className="login-box">
+
+          {/* Brand */}
+          <div className="login-brand">
+            <div className="login-brand-dot">🛍️</div>
+            <span className="login-brand-name">ShopLux</span>
+          </div>
+
           <h2>Welcome Back 👋</h2>
-          <p>Login to continue shopping</p>
+          <p className="login-sub">Sign in to continue shopping</p>
 
           <form onSubmit={handleLogin}>
-            <input
-              type="email"
-              placeholder="Enter Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
 
-            <input
-              type="password"
-              placeholder="Enter Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            <div className="login-field">
+              <label htmlFor="lg-email">Email Address</label>
+              <input
+                id="lg-email"
+                type="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
 
-            <button type="submit">
-              {loading ? "Logging in..." : "Login"}
+            <div className="login-field">
+              <label htmlFor="lg-password">Password</label>
+              <input
+                id="lg-password"
+                type="password"
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+
+            <button type="submit" disabled={loading}>
+              {loading ? "Signing in…" : "Sign In"}
             </button>
+
           </form>
+
+          <div className="login-divider">or</div>
 
           <p className="signup-text">
             Don't have an account?{" "}
             <span onClick={() => navigate("/")}>Sign Up</span>
           </p>
+
         </div>
       </div>
     </div>

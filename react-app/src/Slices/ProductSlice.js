@@ -1,9 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 
-const API_URL =
-  import.meta.env.VITE_API_URL || "https://apis-10-hzxn.onrender.com"
-
-const BASE_URL = `${API_URL}/api/productRoutes`
+const BASE_URL = "https://apis-17.onrender.com/api/productRoutes"
 
 // Safe response parser
 async function safeBody(res) {

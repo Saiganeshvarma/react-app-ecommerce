@@ -6,6 +6,8 @@ const TopNav = ({ title = "Shop" }) => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { user } = useSelector((state) => state.auth)
+  const cartItems = useSelector((state) => state.cart.items)
+  const cartCount = cartItems.reduce((sum, i) => sum + i.quantity, 0)
 
   const handleLogout = () => {
     dispatch(logout())
@@ -32,6 +34,22 @@ const TopNav = ({ title = "Shop" }) => {
               Dashboard
             </button>
           )}
+          {user?.role !== "admin" && (
+            <button className="btn btn-ghost cart-nav-btn" onClick={() => navigate("/cart")}>
+              🛒 Cart
+              {cartCount > 0 && (
+                <span className="cart-badge">{cartCount}</span>
+              )}
+            </button>
+          )}
+          {user?.role !== "admin" && (
+            <button className="btn btn-ghost" onClick={() => navigate("/orders")}>
+              📦 Orders
+            </button>
+          )}
+          <button className="btn btn-ghost" onClick={() => navigate("/profile")}>
+            👤 Profile
+          </button>
           <button className="btn btn-danger" onClick={handleLogout}>
             Logout
           </button>
