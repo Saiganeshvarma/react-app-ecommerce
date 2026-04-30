@@ -1,0 +1,152 @@
+/* ── Search & Filter Bar ────────────────────── */
+
+.sf-wrap {
+  margin-bottom: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Search input */
+.sf-search-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.sf-search-icon {
+  position: absolute;
+  left: 16px;
+  font-size: 15px;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.sf-search {
+  width: 100%;
+  padding: 14px 44px 14px 46px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.05);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 15px;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.sf-search::placeholder { color: var(--muted-2); }
+
+.sf-search:focus {
+  border-color: rgba(124,111,255,0.55);
+  background: rgba(124,111,255,0.07);
+  box-shadow: 0 0 0 3px rgba(124,111,255,0.12);
+}
+
+.sf-clear {
+  position: absolute;
+  right: 14px;
+  background: rgba(255,255,255,0.08);
+  border: none;
+  color: var(--muted);
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: all 0.15s;
+}
+
+.sf-clear:hover { background: rgba(255,77,109,0.2); color: var(--danger); }
+
+/* Filters row */
+.sf-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 16px;
+}
+
+.sf-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 160px;
+}
+
+.sf-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--muted-2);
+}
+
+.sf-select {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.05);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 13px;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='rgba(255,255,255,0.4)' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+}
+
+.sf-select:focus {
+  border-color: rgba(124,111,255,0.5);
+  box-shadow: 0 0 0 3px rgba(124,111,255,0.12);
+}
+
+.sf-select option { background: #0c1018; }
+
+/* Range slider */
+.sf-range {
+  width: 100%;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.1);
+  outline: none;
+  cursor: pointer;
+  accent-color: var(--primary);
+  margin-top: 4px;
+}
+
+/* Reset button */
+.sf-reset {
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,77,109,0.25);
+  background: rgba(255,77,109,0.08);
+  color: var(--danger);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  align-self: flex-end;
+  white-space: nowrap;
+}
+
+.sf-reset:hover {
+  background: rgba(255,77,109,0.16);
+  border-color: rgba(255,77,109,0.4);
+}
+
+/* Count */
+.sf-count {
+  font-size: 13px;
+  color: var(--muted-2);
+  margin: 0;
+}
+
+.sf-count strong { color: var(--muted); }

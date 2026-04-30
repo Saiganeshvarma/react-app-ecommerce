@@ -2,6 +2,8 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from "react-redux"
 import { useParams, useNavigate } from "react-router-dom"
 import { fetchSingleProduct } from '../Slices/ProductSlice'
+import { addToCart } from '../Slices/CartSlice'
+import { toast, Toaster } from "react-hot-toast"
 import TopNav from "./TopNav"
 import "./GetSingleProduct.css"
 
@@ -10,13 +12,18 @@ const GetSingleProduct = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  const { singleProduct, loading, error } = useSelector(
-    (state) => state.products
-  )
+  const { singleProduct, loading, error } = useSelector((state) => state.products)
+  const { user } = useSelector((state) => state.auth)
+  const { actionLoading } = useSelector((state) => state.cart)
 
-  useEffect(() => {
-    dispatch(fetchSingleProduct(id))
-  }, [dispatch, id])
+  useEffect(() => { dispatch(fetchSingleProduct(id)) }, [dispatch, id])
+
+  const handleAddToCart = () => {
+    dispatch(addToCart({ productId: id, quantity: 1 }))
+      .unwrap()
+      .then(() => toast.success("Added to cart 🛒"))
+      .catch((err) => toast.error(err || "Failed to add"))
+  }
 
   if (loading) return (
     <div className="app-shell">
@@ -49,6 +56,7 @@ const GetSingleProduct = () => {
 
   return (
     <div className="app-shell">
+      <Toaster />
       <TopNav title="Product details" />
       <main className="page">
         <div className="container">
@@ -62,25 +70,20 @@ const GetSingleProduct = () => {
             {/* IMAGE */}
             <div className="sp-image-wrap">
               {singleProduct.image?.url ? (
-                <img
-                  src={singleProduct.image.url}
-                  alt={singleProduct.title}
-                  className="sp-image"
-                />
+                <img src={singleProduct.image.url} alt={singleProduct.title} className="sp-image" />
               ) : (
-                <div className="sp-no-image">No image</div>
+                <div className="sp-no-image">📦</div>
               )}
             </div>
 
             {/* DETAILS */}
             <div className="sp-details">
-
               <p className="sp-category">Product Details</p>
               <h1 className="sp-title">{singleProduct.title}</h1>
               <p className="sp-desc">{singleProduct.description}</p>
 
               <div className="sp-price-block">
-                <span className="sp-price">₹ {singleProduct.price}</span>
+                <span className="sp-price">₹ {singleProduct.price?.toLocaleString()}</span>
                 <span className="sp-badge">In Stock</span>
               </div>
 
@@ -103,15 +106,23 @@ const GetSingleProduct = () => {
 
               <div className="sp-divider" />
 
-              <div className="sp-actions">
-                <button className="btn btn-primary sp-btn-buy">
-                  Buy Now
-                </button>
-                <button className="btn sp-btn-cart">
-                  Add to Cart
-                </button>
-              </div>
-
+              {user?.role !== "admin" && (
+                <div className="sp-actions">
+                  <button
+                    className="btn btn-primary sp-btn-buy"
+                    onClick={handleAddToCart}
+                    disabled={actionLoading}
+                  >
+                    {actionLoading ? "Adding…" : "🛒 Add to Cart"}
+                  </button>
+                  <button
+                    className="btn sp-btn-cart"
+                    onClick={() => navigate("/cart")}
+                  >
+                    View Cart
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 

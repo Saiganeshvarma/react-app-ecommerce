@@ -13,6 +13,7 @@ const UpdateProduct = ({ product }) => {
   const [title, setTitle] = useState(product.title)
   const [description, setDescription] = useState(product.description)
   const [price, setPrice] = useState(product.price)
+  const [stock, setStock] = useState(product.stock ?? 0)
   const [image, setImage] = useState(null)
   const [preview, setPreview] = useState(product.image?.url || null)
 
@@ -30,6 +31,7 @@ const UpdateProduct = ({ product }) => {
     setTitle(product.title)
     setDescription(product.description)
     setPrice(product.price)
+    setStock(product.stock ?? 0)
   }
 
   const handleSubmit = async (e) => {
@@ -42,6 +44,7 @@ const UpdateProduct = ({ product }) => {
     formData.append("title", title)
     formData.append("description", description)
     formData.append("price", price)
+    formData.append("stock", stock)
     if (image) formData.append("image", image)
 
     try {
@@ -139,6 +142,20 @@ const UpdateProduct = ({ product }) => {
                     value={price}
                     onChange={(e) => setPrice(e.target.value)}
                     placeholder="0.00"
+                  />
+                </div>
+
+                <div className="up-field">
+                  <label className="up-label" htmlFor="up-stock">Stock</label>
+                  <input
+                    id="up-stock"
+                    className="input"
+                    type="number"
+                    min="0"
+                    step="1"
+                    value={stock}
+                    onChange={(e) => setStock(e.target.value)}
+                    placeholder="0"
                   />
                 </div>
               </div>

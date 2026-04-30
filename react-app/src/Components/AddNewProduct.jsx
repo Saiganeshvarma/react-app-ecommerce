@@ -10,6 +10,7 @@ const AddNewProduct = ({ close }) => {
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
   const [price, setPrice] = useState("")
+  const [stock, setStock] = useState("")
   const [image, setImage] = useState(null)
   const [preview, setPreview] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -38,6 +39,7 @@ const AddNewProduct = ({ close }) => {
     formData.append("title", title)
     formData.append("description", description)
     formData.append("price", String(priceNumber))
+    formData.append("stock", String(Number(stock) || 0))
     formData.append("image", image)
 
     try {

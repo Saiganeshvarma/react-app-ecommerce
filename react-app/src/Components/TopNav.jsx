@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { logout } from "../Slices/authSlice"
+import "./TopNav.css"
 
 const TopNav = ({ title = "Shop" }) => {
   const dispatch = useDispatch()
@@ -17,43 +18,51 @@ const TopNav = ({ title = "Shop" }) => {
   return (
     <header className="nav">
       <div className="container nav-inner">
+
+        {/* Brand */}
         <div className="brand" role="button" tabIndex={0} onClick={() => navigate("/home")}>
-          <div className="brand-badge" aria-hidden="true" />
-          <div>
-            <div style={{ fontSize: 14, color: "var(--muted)" }}>{title}</div>
-            <div style={{ marginTop: 1, fontSize: 16 }}>Ecommerce</div>
+          <div className="nav-logo">
+            <span>S</span>
+          </div>
+          <div className="nav-brand-text">
+            <span className="nav-brand-name">ShopLux</span>
+            <span className="nav-brand-sub">{title}</span>
           </div>
         </div>
 
-        <div className="nav-actions">
-          <button className="btn btn-ghost" onClick={() => navigate("/home")}>
-            Home
-          </button>
+        {/* Actions */}
+        <nav className="nav-actions">
+          <button className="nav-link" onClick={() => navigate("/home")}>Home</button>
+
           {user?.role === "admin" && (
-            <button className="btn btn-ghost" onClick={() => navigate("/dashboard")}>
-              Dashboard
-            </button>
+            <button className="nav-link" onClick={() => navigate("/dashboard")}>Dashboard</button>
           )}
+
           {user?.role !== "admin" && (
-            <button className="btn btn-ghost cart-nav-btn" onClick={() => navigate("/cart")}>
-              🛒 Cart
-              {cartCount > 0 && (
-                <span className="cart-badge">{cartCount}</span>
-              )}
+            <button className="nav-link cart-nav-btn" onClick={() => navigate("/cart")}>
+              <span className="nav-link-icon">🛒</span>
+              Cart
+              {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
             </button>
           )}
+
           {user?.role !== "admin" && (
-            <button className="btn btn-ghost" onClick={() => navigate("/orders")}>
-              📦 Orders
+            <button className="nav-link" onClick={() => navigate("/orders")}>
+              <span className="nav-link-icon">📦</span>
+              Orders
             </button>
           )}
-          <button className="btn btn-ghost" onClick={() => navigate("/profile")}>
-            👤 Profile
+
+          <button className="nav-link" onClick={() => navigate("/profile")}>
+            <span className="nav-link-icon">👤</span>
+            Profile
           </button>
-          <button className="btn btn-danger" onClick={handleLogout}>
+
+          <button className="nav-logout" onClick={handleLogout}>
             Logout
           </button>
-        </div>
+        </nav>
+
       </div>
     </header>
   )

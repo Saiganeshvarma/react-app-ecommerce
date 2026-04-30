@@ -1,93 +1,68 @@
-/* ================================
-   AddNewProduct — premium modal form
-   ================================ */
+/* ── Add New Product Form ───────────────────── */
 
-.anp-form {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
+.anp-form { display: flex; flex-direction: column; gap: 18px; }
 
-/* ---- Upload zone ---- */
+/* Upload zone */
 .anp-upload-zone {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
-  min-height: 160px;
-  border: 2px dashed rgba(108, 99, 255, 0.45);
-  border-radius: 14px;
-  background: rgba(108, 99, 255, 0.06);
+  min-height: 170px;
+  border: 2px dashed rgba(124,111,255,0.35);
+  border-radius: 16px;
+  background: rgba(124,111,255,0.05);
   cursor: pointer;
   overflow: hidden;
-  transition: border-color 0.2s, background 0.2s;
+  transition: all 0.2s;
 }
 
 .anp-upload-zone:hover {
-  border-color: rgba(108, 99, 255, 0.8);
-  background: rgba(108, 99, 255, 0.1);
+  border-color: rgba(124,111,255,0.7);
+  background: rgba(124,111,255,0.1);
 }
 
 .anp-upload-placeholder {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   padding: 24px;
   text-align: center;
   pointer-events: none;
 }
 
-.anp-upload-icon {
-  font-size: 32px;
-  line-height: 1;
-}
+.anp-upload-icon { font-size: 36px; }
 
 .anp-upload-label {
   font-size: 14px;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--muted);
 }
 
-.anp-upload-hint {
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.45);
-}
+.anp-upload-hint { font-size: 12px; color: var(--muted-2); }
 
 .anp-preview {
   width: 100%;
-  height: 160px;
+  height: 170px;
   object-fit: cover;
-  border-radius: 12px;
+  border-radius: 14px;
 }
 
-/* ---- Fields ---- */
-.anp-fields {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
+/* Fields */
+.anp-fields { display: flex; flex-direction: column; gap: 14px; }
 
-.anp-field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
+.anp-field { display: flex; flex-direction: column; gap: 7px; }
 
 .anp-label {
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.55);
+  color: var(--muted-2);
 }
 
-.anp-input {
-  font-size: 14px;
-  resize: vertical;
-}
-
-/* ---- Actions ---- */
+/* Actions */
 .anp-actions {
   display: flex;
   gap: 10px;
@@ -95,34 +70,24 @@
   padding-top: 4px;
 }
 
-.anp-btn-cancel {
-  min-width: 90px;
-}
+.anp-btn-cancel { min-width: 90px; }
 
 .anp-btn-submit {
-  min-width: 120px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  min-width: 130px;
   gap: 8px;
 }
 
-.anp-btn-submit:disabled {
-  opacity: 0.65;
-  cursor: not-allowed;
-}
+.anp-btn-submit:disabled { opacity: 0.55; cursor: not-allowed; }
 
-/* ---- Spinner ---- */
+/* Spinner */
 .anp-spinner {
   width: 16px;
   height: 16px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  border: 2px solid rgba(255,255,255,0.25);
   border-top-color: #fff;
   border-radius: 50%;
-  animation: anp-spin 0.7s linear infinite;
+  animation: spin 0.7s linear infinite;
   display: inline-block;
 }
 
-@keyframes anp-spin {
-  to { transform: rotate(360deg); }
-}
+@keyframes spin { to { transform: rotate(360deg); } }

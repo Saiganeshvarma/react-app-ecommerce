@@ -1,0 +1,111 @@
+/* ── TopNav ─────────────────────────────────── */
+
+.nav-logo {
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-2) 100%);
+  box-shadow: 0 4px 18px var(--primary-glow);
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  font-weight: 900;
+  color: #fff;
+  flex-shrink: 0;
+  letter-spacing: -0.5px;
+}
+
+.nav-brand-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.nav-brand-name {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  color: var(--text);
+  line-height: 1;
+}
+
+.nav-brand-sub {
+  font-size: 11px;
+  color: var(--muted-2);
+  line-height: 1;
+}
+
+/* Nav links */
+.nav-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 13px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s;
+  white-space: nowrap;
+}
+
+.nav-link:hover {
+  background: rgba(255,255,255,0.07);
+  color: var(--text);
+}
+
+.nav-link-icon { font-size: 14px; }
+
+/* Logout */
+.nav-logout {
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,77,109,0.25);
+  background: rgba(255,77,109,0.08);
+  color: var(--danger);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s;
+  white-space: nowrap;
+}
+
+.nav-logout:hover {
+  background: rgba(255,77,109,0.18);
+  border-color: rgba(255,77,109,0.45);
+}
+
+/* Cart badge */
+.cart-nav-btn { position: relative; }
+
+.cart-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  min-width: 17px;
+  height: 17px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  box-shadow: 0 2px 8px var(--primary-glow);
+  border: 1.5px solid var(--bg);
+}
+
+/* Responsive — hide labels on small screens */
+@media (max-width: 640px) {
+  .nav-brand-sub { display: none; }
+  .nav-link { padding: 8px 10px; font-size: 12px; }
+  .nav-link-icon { display: none; }
+}
